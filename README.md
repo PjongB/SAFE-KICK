@@ -107,6 +107,55 @@ ls /dev/cu.usbmodem*
 
 예를 들어 `/dev/cu.usbmodem1103`이 나오면 이 값을 `SERIAL_PORT`에 사용합니다. STM32CubeIDE 시리얼 모니터 등 다른 프로그램이 포트를 열고 있으면 먼저 닫아야 합니다.
 
+### Windows와 Nucleo USB 연결
+
+1. Nucleo를 USB로 연결합니다.
+2. `장치 관리자 > 포트(COM 및 LPT)`를 엽니다.
+3. `STMicroelectronics STLink Virtual COM Port (COMx)`의 포트 번호를 확인합니다.
+
+PowerShell에서도 현재 COM 포트 목록을 확인할 수 있습니다.
+
+```powershell
+[System.IO.Ports.SerialPort]::GetPortNames()
+```
+
+예를 들어 `COM5`가 나오면 `SERIAL_PORT=COM5`로 사용합니다. 장치 관리자에
+포트가 보이지 않으면 STM32CubeIDE에 포함된 ST-LINK 드라이버를 설치하거나
+STMicroelectronics의 ST-LINK USB 드라이버를 설치한 뒤 보드를 다시
+연결합니다.
+
+STM32CubeIDE Serial Terminal, PuTTY, Tera Term 등에서 같은 COM 포트를 열고
+있으면 Python 서버가 포트를 열 수 없으므로 먼저 연결을 종료합니다.
+
+### Ubuntu와 Nucleo USB 연결
+
+Nucleo는 일반적으로 `/dev/ttyACM0`으로 인식됩니다.
+
+```bash
+ls /dev/ttyACM*
+```
+
+연결 직후 장치 이름을 확인하려면 다음 명령도 사용할 수 있습니다.
+
+```bash
+dmesg | tail -n 30
+```
+
+시리얼 포트 권한 오류가 발생하면 현재 사용자를 `dialout` 그룹에 추가합니다.
+
+```bash
+sudo usermod -aG dialout "$USER"
+```
+
+적용하려면 Ubuntu에서 로그아웃 후 다시 로그인하거나 재부팅해야 합니다.
+예를 들어 `/dev/ttyACM0`이 확인되면 이 값을 `SERIAL_PORT`에 사용합니다.
+
+다른 프로그램이 포트를 사용 중인지 확인할 때는 다음 명령을 사용합니다.
+
+```bash
+lsof /dev/ttyACM0
+```
+
 ### Raspberry Pi GPIO UART 연결
 
 | Raspberry Pi | STM32 |
@@ -154,6 +203,71 @@ python3 -m uvicorn app.main:app \
   --host 127.0.0.1 \
   --port 8000 \
   --log-level debug
+```
+
+### Windows PowerShell에서 실행
+
+처음 설정하는 경우 저장소의 `raspberry-pi` 폴더에서 가상환경과 테스트
+의존성을 준비합니다.
+
+```powershell
+cd raspberry-pi
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements-test.txt
+```
+
+PowerShell이 스크립트 실행을 차단하면 현재 터미널에서만 허용한 뒤 다시
+활성화합니다.
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+장치 관리자에서 확인한 COM 포트를 지정해 서버를 실행합니다.
+
+```powershell
+$env:ENABLE_FACE_API="false"
+$env:ENABLE_TEST_API="true"
+$env:USE_UART_MOCK="false"
+$env:SERIAL_PORT="COM5"
+$env:BAUD_RATE="115200"
+
+python -m uvicorn app.main:app `
+  --host 127.0.0.1 `
+  --port 8000 `
+  --log-level debug
+```
+
+### Ubuntu에서 실행
+
+`SERIAL_PORT`는 앞에서 확인한 `/dev/ttyACM*` 장치명으로 바꿉니다.
+
+```bash
+cd raspberry-pi
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements-test.txt
+
+ENABLE_FACE_API=false \
+ENABLE_TEST_API=true \
+USE_UART_MOCK=false \
+SERIAL_PORT=/dev/ttyACM0 \
+BAUD_RATE=115200 \
+python3 -m uvicorn app.main:app \
+  --host 127.0.0.1 \
+  --port 8000 \
+  --log-level debug
+```
+
+Ubuntu에서 `python3 -m venv`가 실패하면 다음 패키지를 설치한 뒤 다시
+시도합니다.
+
+```bash
+sudo apt update
+sudo apt install python3-venv
 ```
 
 ### Raspberry Pi에서 실행
@@ -257,6 +371,8 @@ GET  /session/summary
 - STM32CubeIDE 시리얼 모니터나 다른 터미널 프로그램을 닫습니다.
 - `SERIAL_PORT`가 현재 장치명과 같은지 다시 확인합니다.
 - USB 케이블을 다시 연결하면 macOS 장치 번호가 바뀔 수 있습니다.
+- Windows에서는 장치 관리자의 COM 번호와 `SERIAL_PORT`가 같은지 확인합니다.
+- Ubuntu에서는 `dialout` 그룹 적용을 위해 다시 로그인했는지 확인합니다.
 
 ### `stm32_connected`가 `false`인 경우
 
