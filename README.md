@@ -11,6 +11,7 @@ SAFE-KICK 전동 킥보드 안전 시스템의 Raspberry Pi 서버와 STM32 펌�
 - [macOS 전체 설정 가이드](docs/SETUP_MACOS.md)
 - [Windows 전체 설정 가이드](docs/SETUP_WINDOWS.md)
 - [Ubuntu 전체 설정 가이드](docs/SETUP_UBUNTU.md)
+- [Confluence용 시스템 문서](docs/CONFLUENCE_SAFE_KICK.md)
 
 ## 시스템 구성
 
