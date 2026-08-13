@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.env.*
+.venv/
+__pycache__/
+*.py[cod]
+*.db
+*.sqlite3
+*.npy
+
+**/Debug/
+**/Release/
+*.elf
+*.bin
+*.hex
+*.map
+*.o

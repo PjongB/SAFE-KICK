@@ -1,0 +1,8 @@
+class UARTCommand:
+    LOCK = "LOCK"
+    UNLOCK = "UNLOCK"
+    CHECK_MQ3 = "CHECK_MQ3"
+    CHECK_WEIGHT = "CHECK_WEIGHT"
+    STOP_WEIGHT = "STOP_WEIGHT"
+    BUZZ_ON = "BUZZ_ON"
+    BUZZ_OFF = "BUZZ_OFF"
