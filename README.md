@@ -2,6 +2,16 @@
 
 SAFE-KICK 전동 킥보드 안전 시스템의 Raspberry Pi 서버와 STM32 펌웨어를 한 저장소에서 관리합니다.
 
+## 운영체제별 전체 설정 가이드
+
+사용 중인 운영체제에 맞는 문서를 선택하면 저장소 다운로드부터 STM32
+펌웨어 업로드, Python 서버 실행, UART 연결, API 테스트까지 순서대로 진행할
+수 있습니다.
+
+- [macOS 전체 설정 가이드](docs/SETUP_MACOS.md)
+- [Windows 전체 설정 가이드](docs/SETUP_WINDOWS.md)
+- [Ubuntu 전체 설정 가이드](docs/SETUP_UBUNTU.md)
+
 ## 시스템 구성
 
 ```text
@@ -93,7 +103,7 @@ python3 -m pip install -r requirements.txt
 다음에 다시 실행할 때는 프로젝트로 이동해 가상환경만 활성화하면 됩니다.
 
 ```bash
-cd SAFE-KICK/raspberry-pi
+cd /path/to/SAFE-KICK/raspberry-pi
 source .venv/bin/activate
 ```
 
