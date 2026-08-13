@@ -145,4 +145,3 @@ Uvicorn running on http://127.0.0.1:8000
 - 가상환경 오류: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`
 - 무게 오류: 보드 리셋 후 `Tare...` 동안 발판을 비워 두기
 - WSL 사용 시: USB 장치가 자동 연결되지 않으므로 native PowerShell 실행을 권장
-
